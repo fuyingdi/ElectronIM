@@ -9,7 +9,7 @@ new Vue({
     mask: false,
     showchat: true,
     showgroup: false,
-    userid: window.localStorage.getItem('uid'),
+    userid: 'user',
     fakefriendlist:[
       {
         username:"冯佳丽",
@@ -26,10 +26,26 @@ new Vue({
         endmessage:"123",
         introduction:"zzzzzzzz"
       },
-    ]
+    ],
+    messageList:[
+      {
+        type:"",
+        content:"",
+      },
+      {
+        type:"",
+        content:"",
+      },
+      {
+        type:"",
+        content:"",
+      }
+    ],
+    domain:"",
   },
   created(){
     this.loaduser();
+    this.checkIfMessage();
   },
   filters: {
     filterImg:(img)=>{
@@ -91,6 +107,32 @@ new Vue({
       },function(res){
         console.log(res.status);
       });
+    },
+    checkIfMessage(){
+      console.log("fuck")
+      axio
+        .get(domain+'/api/messages/new/'+userid)
+        .then(function(response){
+          if(response.data.new==true)
+          {
+            getMessage();
+          }
+          else{
+            console.log("nonono");
+          }
+        })
+        .catch(function(error)
+        {
+          console.log(error);
+        })
+    },
+    getMessage(){
+      axios
+      .get(domain+'/api/messages/'+userid)
+      .then(function(response){
+        console.log(response.data);
+      })
+      .catch()
     }
   }
 });
