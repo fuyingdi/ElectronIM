@@ -3,7 +3,7 @@ new Vue({
   data: {
     searchFriend: "",
     userList: null,
-    current:{username:"冯佳丽"},
+    current:{username:"user"},
     group: false,
     isgroup: false,
     isChat: false,
@@ -42,7 +42,7 @@ new Vue({
         content:"",
       }
     ],
-    domain:"",
+    domain:"http://118.24.15.77:5000",
     sendContent:"",
   },
   created(){
@@ -53,7 +53,7 @@ new Vue({
   {
     setInterval(() => {
       this.checkIfMessage();
-    }, 100);
+    }, 500);
   },
   filters: {
     filterImg:(img)=>{
@@ -121,13 +121,14 @@ new Vue({
       });
     },
     checkIfMessage(){
-      console.log("fuck")
+      // console.log("fuck")
+      var that = this;
       axios
         .get(this.domain+'/api/messages/new/'+this.userid)
         .then(function(response){
           if(response.data.new==true)
           {
-            getMessage();
+            that.getMessage();
           }
           else{
             console.log("nonono");
@@ -148,15 +149,15 @@ new Vue({
     },
     sendMessage(){
       let data = {
-        to:current.username,
+        to:this.current.username,
         type:"text",
         content:this.sendContent,
         from:this.userid,
       }
       axios
-        .post(this.domain+"/api/messages",data)
+        .post(this.domain+"/api/messages/"+this.current.username,data)
         .then(res=>{console.log("res=>"+res)})
         .catch(error=>{console.log(error)})
     }
-  }
+  },
 });
