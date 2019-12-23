@@ -18,7 +18,7 @@ body{
 .right .title .operation,.left .user-list ul,.search>input,
 .content .message, .edit, .left .menu-item, .left .menu-item .menu-radius,
 .left-list .group, .left-list .group .group-tab ,.left-list .group .group-tab > div,
-.group-box, .group-box .group-list, .group-box .muc-list{
+.group-box, .group-box .group-list{
   -webkit-app-region: no-drag;
 }
 .main{
@@ -84,13 +84,6 @@ body{
   font-size: 14px;
   padding: 10px 2px;
 }
-.group-box .group-list {
-
-}
-.group-box .muc-list {
-
-}
-
 .left-inform{
   width: 70px;
   background-color: rgba(48,35,27,.8);
@@ -284,7 +277,7 @@ body{
 .content{
   width: 100%;
   height: 100%;
-  padding: 80px 4px 120px 20px;
+  padding: 80px 20px 220px 20px;
 }
 .content .message{
   width: 100%;
@@ -405,7 +398,7 @@ body{
 }
 .right .title{
   width: 100%;
-  height: 80px;
+  height: 40px;
   position: absolute;
   left: 0;
   top: 0;
@@ -413,13 +406,11 @@ body{
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 1px 1px 2px rgba(0,0,0,.18);
   -webkit-app-region: drag;
-}
-.right .title .userPhoto{
-  padding: 10px;
-  float: left;
+  text-align: center;
+  padding-top: 10px;
+  background-color: rgb(137,121,114);
 }
 .right .title .userInform{
-  padding-top: 20px;
   display: inline-block;
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
@@ -427,75 +418,8 @@ body{
 .right .title .userInform strong{
   display: block;
   font-size: 16px;
-  color: #333;
+  color: white;
   font-weight: inherit;
-}
-.right .title .userInform span{
-  font-size: 12px;
-  color: #999;
-}
-.right .title .operation{
-  height: 53px;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-.operation .sendfile, .operation .information{
-  width: 50px;
-  height: 53px;
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  background-image: url(../img/file.jpg);
-  background-position: 0  0;
-}
-.sendfile input{
-  width: 50px;
-  height: 53px;
-  opacity: 0;
-  cursor: pointer;
-}
-/*.sendfile .file-type{
-  width: 120px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #FFF;
-  border-radius: 5px;
-  position: absolute;
-  display: block;
-  top: 64px;
-  right: 0;
-}
-.sendfile .file-type:after, .sendfile .file-type:before{
-  content: '';
-  position: absolute;
-  right: 10px;
-  top: -21px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: transparent transparent #CCC transparent;
-}
-.sendfile .file-type:after{
-  top: -20px;
-  border-color: transparent transparent #FFF transparent;
-}*/
-.sendfile .file-type>p, .sendfile .file-type input{
-  width: 100%;
-  height: 30px;
-}
-.sendfile .file-type input{
-  opacity: 0;
-}
-.operation .information{
-  background-position: -84px 0;
-  margin-left: 20px;
-}
-.userPhoto img{
-  width: 60px;
-  height: 60px;
-  border-radius: 60px;
-  overflow: hidden;
 }
 .edit{
   width: 100%;
@@ -597,7 +521,7 @@ body{
   color: #666;
   font-size: 14px;
   padding: 5px 10px;
-  width: 600px;
+  width: 100%;
   line-height: 22px;
   height: 110px;
   max-height: 110px;
@@ -606,7 +530,7 @@ body{
   border: 0;
   outline: 0;
   cursor: text;
-  padding: 0 10px;
+  padding: 10px 10px;
   overflow: auto;
   display: block;
   word-wrap: break-word;
@@ -627,19 +551,12 @@ body{
   height: 30px;
   width: 80px;
   float: right;
+  background-color: rgb(137,121,114);
+  color: white;
 }
-.send-button:hover{
-  color: #888;
+#send-button:hover{
+  background-color: rgba(137,121,114,.5);
 }
-/* // .edit textarea{
-//   width: 600px;
-//   padding: 2px 5px;
-//   line-height: 22px;
-//   height: 70px;
-//   max-height: 70px;
-//   box-shadow: none;
-//   border: none;
-// } */
 .file-cont{
   width: 320px;
   height: 120px;

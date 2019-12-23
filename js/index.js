@@ -2,7 +2,7 @@ new Vue({
   el: '#chat',
   data: {
     userList: null,
-    current: null,
+    current:{username:"冯佳丽"},
     group: false,
     isgroup: false,
     isChat: false,

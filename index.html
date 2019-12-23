@@ -14,6 +14,7 @@
                 <div class="left-inform">
                     <div class="title">
                         <span class="radius close-win" @click="closeWin"></span>
+                        <span class="radius yellow min-win" @click="closeMin"></span>
                     </div>
                     <div class=user>
                         <img src="img/ico.jpg"/>
@@ -23,7 +24,7 @@
                             <span class="menu-radius iconfont icon-chat">&#xe605;</span>
                             <p>消息</p>
                         </div>
-                        <div class="menu-item" :class="{active:showchat}" @click="showGroup">
+                        <div class="menu-item" :class="{active:showgroup}" @click="showGroup">
                             <span class="menu-radius iconfont icon-chat">&#xe605;</span>
                             <p>好友</p>
                         </div>
@@ -33,7 +34,7 @@
                     <div class="chat" v-if="!group">
                       <div class="search"><input id="username" type="text"  placeholder="Search" /></div>
                       <div class="user-list">
-                        <ul >
+                        <ul>
                           <li class="item" v-for="items in fakefriendlist">
                             <img src="./img/test.png" />
                             <div>
@@ -69,6 +70,11 @@
                 </div>
             </div>
             <div class="right" v-show="!isChat">
+                <div class="title">
+                  <div class="userInform">
+                    <strong>{{current.username}}</strong>
+                  </div>
+                </div>
                 <div class="content">
                     <div id="message" class="message"
                     ></div>
@@ -97,5 +103,4 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="./js/chat.js"></script>
 <script src="./js/index.js"></script>
-<!-- <script>require("./js/chat.js")</script> -->
 </html>
