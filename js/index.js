@@ -143,6 +143,14 @@ new Vue({
       axios
       .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
+        //if(messageList.length>10)messageList.shift();
+        messageList.push(
+          {
+            type:"text",
+            content:response.data,
+            self:false,
+          }
+        )
         console.log(response.data);
       })
       .catch()
@@ -154,6 +162,11 @@ new Vue({
         content:this.sendContent,
         from:this.userid,
       }
+      messageList.push({
+        type:"text",
+        content:data.content,
+        self:true,
+      })
       axios
         .post(this.domain+"/api/messages/"+this.current.username,data)
         .then(res=>{console.log("res=>"+res)})
