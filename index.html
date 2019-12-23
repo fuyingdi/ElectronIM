@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+        <title>QQ</title>
+        <link rel="stylesheet" type="text/css" href="css/global.css"/>
+        <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    </head>
+
+    <body>
+        <div class="main" id="chat">
+            <div class="left">
+                <div class="left-inform">
+                    <div class="title">
+                        <span class="radius close-win" @click="closeWin"></span>
+                    </div>
+                    <div class=user>
+                        <img src="img/ico.jpg"/>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-item" :class="{active:showchat}" @click="showChat">
+                            <span class="menu-radius iconfont icon-chat">&#xe605;</span>
+                            <p>消息</p>
+                        </div>
+                        <div class="menu-item" :class="{active:showchat}" @click="showGroup">
+                            <span class="menu-radius iconfont icon-chat">&#xe605;</span>
+                            <p>好友</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="left-list">
+                    <div class="chat" v-if="!group">
+                      <div class="search"><input id="username" type="text"  placeholder="Search" /></div>
+                      <div class="user-list">
+                        <ul >
+                          <li class="item" v-for="items in fakefriendlist">
+                            <img src="./img/test.png" />
+                            <div>
+                              <strong>{{items.username}}</strong>
+                              <span>{{items.endmessage}}</span>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="group"  v-if="group">
+                      <div class="group-tab">
+                        <div class="active">好友列表</div>
+                        <div>+</div>
+                      </div>
+                      <div class="group-box">
+                        <div class="group-list" v-if="isgroup">
+                          您暂时还没有添加任何好友
+                        </div>
+                        <div class="group-list" v-if="!isgroup">
+                            <ul>
+                              <li class="item" v-for="items in fakefriendlist">
+                                <img src="./img/test.png" />
+                                <div>
+                                  <strong>{{items.username}}</strong>
+                                  <span>{{items.introduction}}</span>
+                                </div>
+                              </li>
+                            </ul>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right" v-show="!isChat">
+                <div class="content">
+                    <div id="message" class="message"
+                    ></div>
+                </div>
+                <div class="edit">
+                    <div class="bar" unselectable="on" onmousedown="return false">
+                        <span class="font J-EditItem" unselectable="on" onmousedown="return false"></span>
+                        <span class="face J-EditItem" unselectable="on" onmousedown="return false"></span>
+                        <span class="shake J-EditItem" unselectable="on" onmousedown="return false"></span>
+                        <span class="det J-EditItem" unselectable="on" onmousedown="return false"></span>
+                        <span class="img J-EditItem" unselectable="on" onmousedown="return false"><input type="file" class="add-file" @change="handleFileChange" ref="inputer" /></span>
+                        <span class="muc J-EditItem" unselectable="on" onmousedown="return false" @click="showChat">&#xe625;</span>
+                        <span class="cut J-EditItem" unselectable="on" onmousedown="return false"></span>
+                        <strong class="record fr">查看消息记录</strong>
+                    </div>
+                    <div id="textarea" class="textarea J-Edit" contenteditable="true"></div>
+                    <div id="bottom-button">
+                        <button id="send-button" class="send-button">发送</button>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./js/chat.js"></script>
+<script src="./js/index.js"></script>
+<!-- <script>require("./js/chat.js")</script> -->
+</html>
