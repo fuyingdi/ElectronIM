@@ -42,10 +42,16 @@ new Vue({
       }
     ],
     domain:"",
+    sendContent:"",
   },
   created(){
     this.loaduser();
-    this.checkIfMessage();
+  },
+  mounted()
+  {
+    setInterval(() => {
+      this.checkIfMessage();
+    }, 100);
   },
   filters: {
     filterImg:(img)=>{
@@ -110,8 +116,8 @@ new Vue({
     },
     checkIfMessage(){
       console.log("fuck")
-      axio
-        .get(domain+'/api/messages/new/'+userid)
+      axios
+        .get(this.domain+'/api/messages/new/'+this.userid)
         .then(function(response){
           if(response.data.new==true)
           {
@@ -128,11 +134,23 @@ new Vue({
     },
     getMessage(){
       axios
-      .get(domain+'/api/messages/'+userid)
+      .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
         console.log(response.data);
       })
       .catch()
+    },
+    sendMessage(){
+      let data = {
+        to:current.username,
+        type:"text",
+        content:this.sendContent,
+        from:this.userid,
+      }
+      axios
+        .post(this.domain+"/api/messages",data)
+        .then(res=>{console.log("res=>"+res)})
+        .catch(error=>{console.log(error)})
     }
   }
 });
