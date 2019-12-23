@@ -14,10 +14,9 @@
                 <div class="left-inform">
                     <div class="title">
                         <span class="radius close-win" @click="closeWin"></span>
-                        <span class="radius yellow min-win" @click="closeMin"></span>
                     </div>
                     <div class=user>
-                        <img src="img/ico.jpg"/>
+                        <img src="img/test.png"/>
                     </div>
                     <div class="menu">
                         <div class="menu-item" :class="{active:showchat}" @click="showChat">
@@ -32,9 +31,9 @@
                 </div>
                 <div class="left-list">
                     <div class="chat" v-if="!group">
-                      <div class="search"><input id="username" type="text"  placeholder="Search" /></div>
+                      <div class="search"><input v-model="searchFriend" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter"/></div>
                       <div class="user-list">
-                        <ul>
+                        <ul >
                           <li class="item" v-for="items in fakefriendlist">
                             <img src="./img/test.png" />
                             <div>
@@ -100,7 +99,9 @@
             
         </div>
     </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="./js/chat.js"></script>
 <script src="./js/index.js"></script>
+<!-- <script>require("./js/chat.js")</script> -->
 </html>
