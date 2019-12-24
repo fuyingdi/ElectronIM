@@ -3,14 +3,14 @@ new Vue({
   data: {
     searchFriend: "",
     userList: null,
-    current:{username:"user"},
+    current:{username:"fjl"},
     group: false,
     isgroup: false,
     isChat: false,
     mask: false,
     showchat: true,
     showgroup: false,
-    userid: 'user',
+    userid: 'fyd',
     fakefriendlist:[
       {
         username:"冯佳丽",
@@ -143,14 +143,14 @@ new Vue({
       axios
       .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
+        messageList.concat(response.data.reverse());
         //if(messageList.length>10)messageList.shift();
-        messageList.push(
-          {
-            type:"text",
-            content:response.data,
-            self:false,
-          }
-        )
+        // messageList.push(
+        //   {
+        //     type:"text",
+        //     content:response.data,
+        //     self:false,
+        //   }
         console.log(response.data);
       })
       .catch()
