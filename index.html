@@ -6,6 +6,7 @@
         <title>QQ</title>
         <link rel="stylesheet" type="text/css" href="css/global.css"/>
         <link rel="stylesheet" type="text/css" href="css/index.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.css">
     </head>
 
     <body>
@@ -31,31 +32,33 @@
                 </div>
                 <div class="left-list">
                     <div class="chat" v-if="!group">
-                      <div class="search"><input v-model="searchFriend" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter"/></div>
+                      <div class="search"><input v-model="searchfriendname" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter"/></div>
                       <div class="user-list">
                         <ul >
-                          <li class="item" v-for="items in fakefriendlist">
+                          <li class="item" v-for="item in chatlist">
                             <img src="./img/test.png" />
                             <div>
-                              <strong>{{items.username}}</strong>
-                              <span>{{items.endmessage}}</span>
+                              <strong>{{item.username}}</strong>
+                              <span>{{item.endmessage}}</span>
                             </div>
+                            <span class="drag" v-if="item.unread">{{item.unreadmessage}}</span>
+                            <span class="close" @click="delUser(item)"></span>
                           </li>
                         </ul>
                       </div>
                     </div>
                     <div class="group"  v-if="group">
                       <div class="group-tab">
-                        <div class="active">好友列表</div>
-                        <div>+</div>
+                        <div v-bind:class="{active:isgroup}">好友列表</div>
+                        <div v-bind:class="{active:!isgroup}" class="add-friend">+</div>
                       </div>
                       <div class="group-box">
-                        <div class="group-list" v-if="isgroup">
+                        <div class="group-list" v-if="!isgroup">
                           您暂时还没有添加任何好友
                         </div>
-                        <div class="group-list" v-if="!isgroup">
+                        <div class="group-list" v-if="isgroup">
                             <ul>
-                              <li class="item" v-for="items in fakefriendlist">
+                              <li class="item" v-for="items in allfriendlist">
                                 <img src="./img/test.png" />
                                 <div>
                                   <strong>{{items.username}}</strong>
@@ -71,12 +74,17 @@
             <div class="right" v-show="!isChat">
                 <div class="title">
                   <div class="userInform">
-                    <strong>{{current.username}}</strong>
+                    <strong>{{currentchat.username}}</strong>
                   </div>
                 </div>
                 <div class="content">
-                    <div id="message" class="message"
-                    ></div>
+                    <div id="message" class="message" >
+                        <div v-for="item in messageList" class="message-item">
+                            <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}">
+                                {{item.content}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="edit">
                     <div class="bar" unselectable="on" onmousedown="return false">
@@ -89,18 +97,24 @@
                         <span class="cut J-EditItem" unselectable="on" onmousedown="return false"></span>
                         <strong class="record fr">查看消息记录</strong>
                     </div>
-                    <textarea id="textarea" class="textarea J-Edit" contenteditable="true" v-model="sendContent" @keyup.enter="KeyUpEnter"></textarea> 
+                    <textarea id="textarea" class="textarea J-Edit" contenteditable="true" v-model="sendContent" @keyup.enter="KeyDownEnter"></textarea> 
                     <div id="bottom-button">
                         <button id="send-button" class="send-button" @click="sendMessage">发送</button>
                     </div>
                 </div>
             </div>
-                 
-        </div>
+            <div class="right" v-show="isChat">
+                <div class="center-chatImg">
+                  <div class="img">
+                    <img src="img/test.png" />
+                  </div>
+                  <p>开始聊天吧!</p>
+                </div>
+              </div>     
+            </div>
     </body>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="./js/chat.js"></script>
 <script src="./js/index.js"></script>
-<!-- <script>require("./js/chat.js")</script> -->
 </html>
