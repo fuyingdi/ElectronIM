@@ -1,27 +1,16 @@
 new Vue({
   el: '#chat',
   data: {
-<<<<<<< HEAD
-    searchFriend: "",
-    userList: null,
-    current:{username:"fjl"},
-=======
     searchfriendname: "",
->>>>>>> ebda7e170f619b2ec4a65a1da8c2f8c8a60350ce
     group: false,
     isgroup: true,
     isChat: false,
     showchat: true,
     showgroup: false,
-<<<<<<< HEAD
     userid: 'fyd',
-    fakefriendlist:[
-=======
-    userid: 'user',
     allfriendlist:null,
-    currentchat:{username:"user"},
+    currentchat:{username:"fjl"},
     chatlist:[
->>>>>>> ebda7e170f619b2ec4a65a1da8c2f8c8a60350ce
       {
         username:"冯佳丽",
         endmessage:"hello"
@@ -187,7 +176,7 @@ new Vue({
       axios
       .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
-        messageList.concat(response.data.reverse());
+        this.messageList = this.messageList.concat(response.data.reverse());
         //if(messageList.length>10)messageList.shift();
         // messageList.push(
         //   {
@@ -206,7 +195,7 @@ new Vue({
         content:this.sendContent,
         from:this.userid,
       }
-      messageList.push({
+      this.messageList.push({
         type:"text",
         content:data.content,
         self:true,
