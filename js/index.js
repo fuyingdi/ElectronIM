@@ -1,49 +1,89 @@
 new Vue({
   el: '#chat',
   data: {
+<<<<<<< HEAD
     searchFriend: "",
     userList: null,
     current:{username:"fjl"},
+=======
+    searchfriendname: "",
+>>>>>>> ebda7e170f619b2ec4a65a1da8c2f8c8a60350ce
     group: false,
-    isgroup: false,
+    isgroup: true,
     isChat: false,
-    mask: false,
     showchat: true,
     showgroup: false,
+<<<<<<< HEAD
     userid: 'fyd',
     fakefriendlist:[
+=======
+    userid: 'user',
+    allfriendlist:null,
+    currentchat:{username:"user"},
+    chatlist:[
+>>>>>>> ebda7e170f619b2ec4a65a1da8c2f8c8a60350ce
       {
         username:"冯佳丽",
-        endmessage:"hello",
-        introduction:"ffffffff"
+        endmessage:"hello"
       },
       {
         username:"付映迪",
-        endmessage:"123",
-        introduction:"ffffffff"
+        endmessage:"123"
       },
       {
         username:"赵双",
-        endmessage:"123",
-        introduction:"zzzzzzzz"
+        endmessage:"123"
       },
     ],
     messageList:[
       {
         type:"",
-        content:"",
+        content:"111",
+        self: true
       },
       {
         type:"",
-        content:"",
+        content:"222",
+        self: false
       },
       {
         type:"",
-        content:"",
+        content:"33333333333333",
+        self: false
+      },
+      {
+        type:"",
+        content:"111",
+        self: true
+      },
+      {
+        type:"",
+        content:"222",
+        self: false
+      },
+      {
+        type:"",
+        content:"33333333333333",
+        self: false
+      },
+      {
+        type:"",
+        content:"111",
+        self: true
+      },
+      {
+        type:"",
+        content:"222",
+        self: false
+      },
+      {
+        type:"",
+        content:"33333333333333",
+        self: false
       }
     ],
     domain:"http://118.24.15.77:5000",
-    sendContent:"",
+    sendContent:""
   },
   created(){
     this.loaduser();
@@ -54,6 +94,8 @@ new Vue({
     setInterval(() => {
       this.checkIfMessage();
     }, 500);
+    // 请求所有好友列表
+    //前端：聊天好友列表
   },
   filters: {
     filterImg:(img)=>{
@@ -62,8 +104,12 @@ new Vue({
   },
   methods: {
     KeyUpEnter:function(){
-      console.log(this.searchFriend);
-      this.searchFriend = "";
+      console.log(this.searchfriendname);
+      this.searchfriendname = "";
+    },
+    KeyDownEnter:function(){
+      this.sendMessage();
+      this.sendContent = "";
     },
     closeWin(){
       console.log("aaa");
@@ -87,12 +133,11 @@ new Vue({
       this.showgroup = true;
     },
     delUser(item){
-      var index = this.userList.indexOf(item);
-      this.userList.splice(index, 1);
+      var index = this.chatlist.indexOf(item);
+      this.chatlist.splice(index, 1);
     },
     loaduser(){
-      console.log("load fake user list");
-      userList = this.fakefriendlist;
+
       // this.$http.post(config.server+'loaduser',{},{emulateJSON:true}).then(function(res){
       //   this.userList = res.body.result;
       // },function(res){
@@ -100,7 +145,7 @@ new Vue({
       // });
     },
     toggleSession(item){
-      this.current = item;
+      this.currentchat = item;
       this.isChat = true;
       window.localStorage.setItem('current', item.userid);
     },
@@ -121,7 +166,6 @@ new Vue({
       });
     },
     checkIfMessage(){
-      // console.log("fuck")
       var that = this;
       axios
         .get(this.domain+'/api/messages/new/'+this.userid)
@@ -157,7 +201,7 @@ new Vue({
     },
     sendMessage(){
       let data = {
-        to:this.current.username,
+        to:this.currentchat.username,
         type:"text",
         content:this.sendContent,
         from:this.userid,
@@ -168,7 +212,7 @@ new Vue({
         self:true,
       })
       axios
-        .post(this.domain+"/api/messages/"+this.current.username,data)
+        .post(this.domain+"/api/messages/"+this.currentchat.username,data)
         .then(res=>{console.log("res=>"+res)})
         .catch(error=>{console.log(error)})
     }
