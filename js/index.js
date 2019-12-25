@@ -186,7 +186,7 @@ new Vue({
           console.log(a);
           that.messageList.push(
             {
-              type:"text",
+              type:a.type,
               content:a.content,
               self:false,
             })
