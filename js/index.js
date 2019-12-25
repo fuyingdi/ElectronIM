@@ -170,6 +170,7 @@ new Vue({
         .then(function(response){
           if(response.data.new==true)
           {
+            console.log("yesyesyes");
             that.getMessage();
             that.scrollToBottom();
           }
@@ -183,15 +184,29 @@ new Vue({
         })
     },
     getMessage(){
+      var that = this;
       axios
       .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
-        this.messageList = this.messageList.concat(response.data.reverse());
+        // this.messageList = this.messageList.concat(response.data.messages);
+        //if(messageList.length>10)messageList.shift();
+        for(var i=0;i<response.data.messages.length;i++)
+        {
+          var a = JSON.parse(response.data.messages[i]);
+          console.log(a);
+          that.messageList.push(
+            {
+              type:a.type,
+              content:a.content,
+              self:false,
+            })
+        }
         console.log(response.data);
       })
       .catch()
     },
     sendMessage(){
+      var that = this;
       let data = {
         to:this.currentchat.username,
         type:"text",
