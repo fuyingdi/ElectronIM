@@ -7,9 +7,9 @@ new Vue({
     isChat: false,
     showchat: true,
     showgroup: false,
-    userid: 'fyd',
+    userid: 'fjl',
     allfriendlist:null,
-    currentchat:{username:"fjl"},
+    currentchat:{username:"冯佳丽"},
     chatlist:[
       {
         username:"冯佳丽",
@@ -71,8 +71,11 @@ new Vue({
         self: false
       }
     ],
+    allmessagelist:{},
     domain:"http://118.24.15.77:5000",
-    sendContent:""
+    sendContent:"",
+    itemheight : 40,
+    scrollheight : 200
   },
   created(){
     this.loaduser();
@@ -83,6 +86,7 @@ new Vue({
     setInterval(() => {
       this.checkIfMessage();
     }, 500);
+    this.scrollToBottom();
     // 请求所有好友列表
     //前端：聊天好友列表
   },
@@ -124,6 +128,8 @@ new Vue({
     delUser(item){
       var index = this.chatlist.indexOf(item);
       this.chatlist.splice(index, 1);
+      // this.allmessagelist.delete(this.allmessagelist[item])
+      // console.log(this.allmessagelist)
     },
     loaduser(){
 
@@ -154,6 +160,9 @@ new Vue({
         console.log(res.status);
       });
     },
+    addfriend(){
+      ipcRenderer.send('add');
+    },
     checkIfMessage(){
       var that = this;
       axios
@@ -162,6 +171,7 @@ new Vue({
           if(response.data.new==true)
           {
             that.getMessage();
+            that.scrollToBottom();
           }
           else{
             console.log("nonono");
@@ -177,13 +187,6 @@ new Vue({
       .get(this.domain+'/api/messages/'+this.userid)
       .then(function(response){
         this.messageList = this.messageList.concat(response.data.reverse());
-        //if(messageList.length>10)messageList.shift();
-        // messageList.push(
-        //   {
-        //     type:"text",
-        //     content:response.data,
-        //     self:false,
-        //   }
         console.log(response.data);
       })
       .catch()
@@ -200,10 +203,31 @@ new Vue({
         content:data.content,
         self:true,
       })
+      this.scrollToBottom();
+      this.sendContent = "";
       axios
         .post(this.domain+"/api/messages/"+this.currentchat.username,data)
         .then(res=>{console.log("res=>"+res)})
         .catch(error=>{console.log(error)})
+    },
+    scrollToBottom: function () {
+      this.$nextTick(() => {
+        var container = this.$el.querySelector("#message");
+        container.scrollTop = container.scrollHeight;
+      })
+    },
+    openchatwindow(chatusername){
+      var arr = {"username":this.currentchat.username,"messagehistory":this.messageList};
+      this.allmessagelist[this.currentchat.username]=arr;
+      this.currentchat.username=chatusername;
+      if(this.allmessagelist[this.currentchat.username]==null){
+        this.messageList=[];
+      }
+      else{
+        this.messageList=this.allmessagelist[this.currentchat.username].messagehistory;
+        console.log(this.allmessagelist[this.currentchat.username].messagehistory)
+      }
+      this.scrollToBottom();
     }
   },
 });

@@ -21,16 +21,16 @@ var converId = null;
 	
 	w.CHAT = {
 		msgObj:d.getElementById("message"),
-		userList: d.getElementById("userList"),
+		userList: d.getElementById("messageList"),
 		screenheight:w.innerHeight ? w.innerHeight : dx.clientHeight,
 		username:null,
 		userid:null,
 		socket:null,
 		//让浏览器滚动条保持在最低部
 		scrollToBottom:function(){
-			if (d.getElementById("message")) {
+			if (d.getElementById("message-item")) {
 				setTimeout(function(){
-					d.getElementById("message").scrollTop = 1000000000;
+					d.getElementById("message-item").scrollTop = 1000000000;
 				},120);
 			}
 		},

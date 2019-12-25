@@ -35,7 +35,7 @@
                       <div class="search"><input v-model="searchfriendname" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter"/></div>
                       <div class="user-list">
                         <ul >
-                          <li class="item" v-for="item in chatlist">
+                          <li class="item" v-for="item in chatlist" @click="openchatwindow(item.username)">
                             <img src="./img/test.png" />
                             <div>
                               <strong>{{item.username}}</strong>
@@ -50,7 +50,7 @@
                     <div class="group"  v-if="group">
                       <div class="group-tab">
                         <div v-bind:class="{active:isgroup}">好友列表</div>
-                        <div v-bind:class="{active:!isgroup}" class="add-friend">+</div>
+                        <div v-bind:class="{active:!isgroup}" class="add-friend" @click="addfriend">+</div>
                       </div>
                       <div class="group-box">
                         <div class="group-list" v-if="!isgroup">
@@ -79,7 +79,7 @@
                 </div>
                 <div class="content">
                     <div id="message" class="message" >
-                        <div v-for="item in messageList" class="message-item">
+                        <div v-for="item in messageList" class="message-item" id="message-item">
                             <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}">
                                 {{item.content}}
                             </div>
@@ -115,6 +115,5 @@
     </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="./js/chat.js"></script>
 <script src="./js/index.js"></script>
 </html>
