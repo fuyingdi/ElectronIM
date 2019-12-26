@@ -1,3 +1,8 @@
+var addon = require('./build/Release/raptorq');
+
+const buf = Buffer.from("hello");
+addon.encode(buf);
+
 const { app, BrowserWindow } = require('electron')
 const electron = require('electron');
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被

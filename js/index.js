@@ -1,3 +1,4 @@
+//const raptorq = require("../build/Release/raptorq");
 new Vue({
   el: '#chat',
   data: {
@@ -212,6 +213,9 @@ new Vue({
         .post(this.domain+"/api/messages/"+this.currentchat.username,data)
         .then(res=>{console.log("res=>"+res)})
         .catch(error=>{console.log(error)})
+    },
+    sendImage(){
+
     }
   },
 });
