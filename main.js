@@ -91,6 +91,7 @@ electron.ipcMain.on("decode", (event, arg)=>{
 
 //发送自己的ip和端口
 electron.ipcMain.on("username",(event, arg)=>{
+  var data={};
   stun.request('stun.l.google.com:19302', (err, res) => {
     if (err) {
       console.error(err);
@@ -98,9 +99,10 @@ electron.ipcMain.on("username",(event, arg)=>{
       const { address } = res.getXorAddress();
       const { port } = res.getXorAddress();
       console.log(address, port );
+      data = {port:port, ip: address};
     }
   });
-  axios.get('/api/addrs/'+arg.username)
+  axios.post('http://118.24.15.77:5000/api/addrs/'+arg.username, data)
   .then(function (response) {
     console.log(response);
   })
