@@ -90,7 +90,7 @@ void encode() {
     return;
   }
 
-void decode(){
+void decode(int file_size){
   // std::vector<uint8_t> m_input;
   // std::ifstream in("./encoded_data", std::ifstream::binary);
   // input.seekg(0,in.end);
@@ -106,7 +106,14 @@ void decode(){
 
 
   ///
-  output.resize(g_len);
+  std::ifstream in("./tmp_data", std::ifstream::binary);
+  in.seekg(0,in.end);
+  int l = in.tellg();
+  res.resize(l);
+  char* a = (char*)&*res.begin();
+  in.seekg(0,in.beg);
+  in.read(a,l);
+  output.resize(file_size);
   using Decoder_type = RaptorQ::Decoder<typename std::vector<uint8_t>::iterator,typename std::vector<uint8_t>::iterator>;
   Decoder_type dec (RaptorQ::Block_Size::Block_225, symbol_size, Decoder_type::Report::COMPLETE);  
      const int len = 65502 ;
@@ -153,7 +160,7 @@ int main(int argc, char* argv[])
   }
   if(!strcmp((char*)argv[1], decode_str))
   {
-    decode();
+    decode(atoi(argv[2]));
     std::cout<<"decode ok";
   }
 }
