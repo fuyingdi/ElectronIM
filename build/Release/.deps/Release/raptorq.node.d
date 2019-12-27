@@ -1,1 +1,1 @@
-cmd_Release/raptorq.node := c++ -bundle -undefined dynamic_lookup -Wl,-no_pie -Wl,-search_paths_first -mmacosx-version-min=10.10 -arch x86_64 -L./Release -stdlib=libc++  -o Release/raptorq.node Release/obj.target/raptorq/raptorq.o 
+cmd_Release/raptorq.node := c++ -bundle -undefined dynamic_lookup -Wl,-no_pie -Wl,-search_paths_first -mmacosx-version-min=10.10 -arch x86_64 -L./Release -stdlib=libc++  -o Release/raptorq.node Release/obj.target/raptorq/raptorq.o /Users/fuyingdi/ElectronIM/libRaptorQ.1.a /usr/lib/libpthread.dylib

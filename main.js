@@ -1,8 +1,11 @@
 var addon = require('./build/Release/raptorq');
-
-const buf = Buffer.from("hello");
-addon.encode(buf);
-
+const buf = Buffer.from("223");
+console.log(buf);
+var res = addon.encode(buf);
+console.log(res)
+console.log(addon.decode(res));
+const { exec } = require('child_process');
+const { execFile, execFileSync } = require('child_process');
 const { app, BrowserWindow } = require('electron')
 const electron = require('electron');
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
@@ -10,6 +13,13 @@ const electron = require('electron');
 let win
 
 function createWindow () {
+  // execFile("./a.out", [], (err, stdout, stderr) => {
+  //   if(err) {
+  //       console.log(err);
+  //       return;
+  //   }
+  //   console.log(`stdout: ${stdout}`);
+// });
   // 创建浏览器窗口。
   mainWindow = new BrowserWindow({
     width: 800
@@ -39,6 +49,13 @@ electron.ipcMain.on("close-main", (event, arg)=> {
 electron.ipcMain.on("min-main", (event, arg)=> {
     mainWindow.minimize();
   });
+
+electron.ipcMain.on("encode", (event, arg)=>{
+  exec("./a.out")
+})
+electron.ipcMain.on("decode", (event, arg)=>{
+  
+})
 // Electron 会在初始化后并准备
 // 创建浏览器窗口时，调用这个函数。
 // 部分 API 在 ready 事件触发后才能使用。

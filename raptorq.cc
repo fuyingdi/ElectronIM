@@ -14,8 +14,7 @@ using v8::Object;
 using v8::String;
 using v8::Value;
 
-const uint16_t symbol_size = 1200;
-std::vector<std::vector<uint8_t>> received;
+const uint16_t symbol_size = 65500;
 using namespace v8;
 using namespace Nan;
 
@@ -25,6 +24,7 @@ NAN_METHOD(encode){
     size_t size = node::Buffer::Length(info[0]);
     using T_it = typename std::vector<uint8_t>::iterator;
     std::vector<uint8_t> input;
+    std::vector<std::vector<uint8_t>> received;
 
     for(char* i=buffer;i<buffer+size;i++)
     {
@@ -36,7 +36,7 @@ NAN_METHOD(encode){
     enc.compute_sync();
     //std::vector<std::pair<symbol_id, std::vector<uint8_t>>> received;
     auto source_sym_it = enc.begin_source();
-    //source_sym_it++;
+    source_sym_it++;
     for(;source_sym_it!=enc.end_source();++source_sym_it){
         std::vector<uint8_t> source_sym_data(symbol_size,0);
         auto it = source_sym_data.begin();
@@ -67,7 +67,7 @@ NAN_METHOD(encode){
         received.emplace_back (std::move(repair_sym_data));
     }
 
-    uint8_t res[350*65500]{0};
+    uint8_t *res = new uint8_t[350*65500];
     int i=0;
     for(auto &x:received)
     {
@@ -80,23 +80,48 @@ NAN_METHOD(encode){
     info.GetReturnValue().Set(Nan::NewBuffer((char*)res, i).ToLocalChecked());
 };
 
-// NAN_METHOD(decode){
-//     Isolate* isolate = Isolate::GetCurrent();
-//     std::vector<uint8_t> output;
+NAN_METHOD(decode){
+    std::vector<uint8_t> output;
+    output.resize(225*65500);
+    char* buffer = (char*) node::Buffer::Data(info[0]->ToObject());
+    size_t size = node::Buffer::Length(info[0]);
 
-//     using Decoder_type = RaptorQ::Decoder<typename std::vector<uint8_t>::iterator,typename std::vector<uint8_t>::iterator>;
-//     Decoder_type dec (RaptorQ::Block_Size::Block_42, symbol_size, Decoder_type::Report::COMPLETE);  
-//     for(auto&rec_sym:received)
-//     {
-//         symbol_id id = rec_sym.first;
-//         auto it = rec_sym.second.begin();
-//         dec.add_symbol(it, rec_sym.second.end(), id);
-//     }
-//     dec.end_of_input(RaptorQ::Fill_With_Zeros::NO);
-//     dec.wait_sync(); //decode
-//     // size_t decode_from_byte =0;
-//     auto out_it = output.begin();
-//     dec.decode_bytes(out_it, output.end(), 0,0);
+    symbol_id tmp_id;
+
+    const int len = 65502 ;
+    std::vector<std::vector<uint8_t>> received;
+    for(auto i=buffer;i<buffer+size;i+=len)
+    {
+        received.push_back(std::vector<uint8_t>(i,i+len));
+    }
+
+    using Decoder_type = RaptorQ::Decoder<typename std::vector<uint8_t>::iterator,typename std::vector<uint8_t>::iterator>;
+    Decoder_type dec (RaptorQ::Block_Size::Block_225, symbol_size, Decoder_type::Report::COMPLETE);  
+    for(auto&rec_sym:received)
+    {
+        uint16_t high_id = rec_sym[0];
+        uint8_t low_id = rec_sym[1];
+        symbol_id id = (high_id<<8)+low_id;
+        tmp_id = id;
+        auto it = rec_sym.begin()+2;
+        dec.add_symbol(it, rec_sym.end(), id);
+    }
+    dec.end_of_input(RaptorQ::Fill_With_Zeros::NO);
+    dec.wait_sync(); //decode
+    // size_t decode_from_byte =0;
+    auto out_it = output.begin();
+    dec.decode_bytes(out_it, output.end(), 0,0);
+
+    char * res = new char[350*65500];
+    int i=0;
+    for(auto x:output)
+    {
+        res[i++]=x;
+    }
+
+    info.GetReturnValue().Set(Nan::NewBuffer(res, i).ToLocalChecked());
+    // info.GetReturnValue().Set(Nan::New((int)output.size()));
+};
 
 
 // }
@@ -104,8 +129,8 @@ NAN_METHOD(encode){
 NAN_MODULE_INIT(Init) {
     Nan::Set(target, New<String>("encode").ToLocalChecked(),
         GetFunction(New<FunctionTemplate>(encode)).ToLocalChecked());  
-    // Nan::Set(target, New<String>("decode").ToLocalChecked(),
-    //     GetFunction(New<FunctionTemplate>(decode)).ToLocalChecked());
+    Nan::Set(target, New<String>("decode").ToLocalChecked(),
+        GetFunction(New<FunctionTemplate>(decode)).ToLocalChecked());
 }
 
 // void Initialize(v8::Handle<v8::Object> exports) {

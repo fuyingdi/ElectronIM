@@ -14,6 +14,7 @@ DEFS_Debug := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DOPENSSL_NO_PINSHARED' \
 	'-DOPENSSL_THREADS' \
+	'-DNAPI_CPP_EXCEPTIONS' \
 	'-DBUILDING_NODE_EXTENSION' \
 	'-DDEBUG' \
 	'-D_DEBUG' \
@@ -39,7 +40,6 @@ CFLAGS_CC_Debug := \
 	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
-	-fno-exceptions \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -70,6 +70,7 @@ DEFS_Release := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DOPENSSL_NO_PINSHARED' \
 	'-DOPENSSL_THREADS' \
+	'-DNAPI_CPP_EXCEPTIONS' \
 	'-DBUILDING_NODE_EXTENSION'
 
 # Flags passed to all source files.
@@ -92,7 +93,6 @@ CFLAGS_CC_Release := \
 	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
-	-fno-exceptions \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -168,7 +168,9 @@ LIBTOOLFLAGS_Release := \
 	-Wl,-no_pie \
 	-Wl,-search_paths_first
 
-LIBS :=
+LIBS := \
+	/Users/fuyingdi/ElectronIM/libRaptorQ.1.a \
+	/usr/lib/libpthread.dylib
 
 $(builddir)/raptorq.node: GYP_LDFLAGS := $(LDFLAGS_$(BUILDTYPE))
 $(builddir)/raptorq.node: LIBS := $(LIBS)

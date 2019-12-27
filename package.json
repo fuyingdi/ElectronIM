@@ -14,6 +14,7 @@
     "electron-rebuild": "^1.8.8"
   },
   "dependencies": {
-    "nan": "^2.14.0"
+    "nan": "^2.14.0",
+    "stun": "^2.1.0"
   }
 }
