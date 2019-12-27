@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+        <title>QQ</title>
+        <link rel="stylesheet" type="text/css" href="css/global.css"/>
+        <link rel="stylesheet" type="text/css" href="css/addfriend.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.css">
+    </head>
+
+    <body>
+        <div class="main" id="add">
+            <div class="login-oper"><span class="login-close" @click="closeadd"></span></div>
+            <div class="search" id="search" style="margin: 0 auto;">
+                <input v-model="searchfriendname" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter" v-modal="searchfriendname"/>
+            </div>
+            <div class="list" v-if="isfinish">
+                <div class="item" v-for="item in userlist" v-if="userlist.length!=0">
+                    <img src="./img/test.png" style="border-radius: 40px;" />
+                    <div>
+                        <strong style="height: 20px;text-align: left;font-size: 20px;margin-top: 5px;">{{item.username}}</strong>
+                        <button style="font-size: 15px;width: 70px;height: 30px;padding: 5px;background-color: rgb(89,79,73);color: white" @click="additem">添加</button>
+                    </div>
+                </div>
+                <div v-if="userlist.length==0" style="text-align: center;font-size: 16px;">
+                    无该用户
+                </div>
+            </div>
+            <div v-if="isok" style="margin-top: 50px;text-align: center;font-size: 16px;">
+                    已向对方发送添加请求
+                </div>
+        </div>
+    </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./js/chat.js"></script>
+<script src="./js/addfriend.js"></script>
+</html>

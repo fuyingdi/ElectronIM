@@ -15,6 +15,7 @@
                 <div class="left-inform">
                     <div class="title">
                         <span class="radius close-win" @click="closeWin"></span>
+                        <span class="radius yellow min-win" @click="closeMin"></span>
                     </div>
                     <div class=user>
                         <img src="img/test.png"/>
@@ -32,40 +33,40 @@
                 </div>
                 <div class="left-list">
                     <div class="chat" v-if="!group">
-                      <div class="search"><input v-model="searchfriendname" id="username" type="text"  placeholder="Search" @keyup.enter="KeyUpEnter"/></div>
                       <div class="user-list">
-                        <ul >
-                          <li class="item" v-for="item in chatlist" @click="openchatwindow(item.username)">
+                        <ul>
+                          <li class="item" v-for="item in chatlist">
                             <img src="./img/test.png" />
-                            <div>
-                              <strong>{{item.username}}</strong>
-                              <span>{{item.endmessage}}</span>
+                            <div @click="openchatwindow(item.username,item)">
+                              <strong style="height: 40px;text-align: left;margin-top: 10px;">{{item.username}}</strong>
                             </div>
-                            <span class="drag" v-if="item.unread">{{item.unreadmessage}}</span>
-                            <span class="close" @click="delUser(item)"></span>
+                            <span class="drag" v-if="item.unreadmessage">{{item.unreadmessage}}</span>
+                            <span class="close" @click="deleteUser(item)"></span>
                           </li>
                         </ul>
                       </div>
                     </div>
                     <div class="group"  v-if="group">
                       <div class="group-tab">
-                        <div v-bind:class="{active:isgroup}">好友列表</div>
-                        <div v-bind:class="{active:!isgroup}" class="add-friend" @click="addfriend">+</div>
+                        <div v-bind:class="{active:isgroup}">在线用户</div>
+                        <!-- <div v-bind:class="{active:!isgroup}" class="add-friend" @click="addfriend">+</div> -->
                       </div>
                       <div class="group-box">
                         <div class="group-list" v-if="!isgroup">
-                          您暂时还没有添加任何好友
+                          暂时还没有任何好友
                         </div>
                         <div class="group-list" v-if="isgroup">
                             <ul>
-                              <li class="item" v-for="items in allfriendlist">
+                              <li class="item" v-for="items in allfriendlist" @dblclick="addchat(items)">
                                 <img src="./img/test.png" />
                                 <div>
-                                  <strong>{{items.username}}</strong>
-                                  <span>{{items.introduction}}</span>
+                                  <strong style="height: 40px;text-align: left;margin-top: 10px;">{{items.username}}</strong>
+                                  <!-- <span>{{items.introduction}}</span> -->
                                 </div>
+                                <!-- <span class="close" @click="deleteFri(items)"></span> -->
                               </li>
                             </ul>
+                            <!-- <p v-if="isde" style="text-align: center;">删除成功</p> -->
                         </div>
                       </div>
                     </div>
@@ -80,24 +81,31 @@
                 <div class="content">
                     <div id="message" class="message" >
                         <div v-for="item in messageList" class="message-item" id="message-item">
-                            <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}">
+                            <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}" v-if="item.type=='text'" style="max-width: 180px;">
                                 {{item.content}}
                             </div>
-                        </div>
+                            <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}" v-if="item.type=='image'">
+                                <img :src="item.content" alt="imgurls" style="max-width: 180px;max-height: 200px">
+                            </div>
+                            <div :class="{'chat-bubble chat-bubble-right': item.self==true,'chat-bubble chat-bubble-left': item.self==false}" v-if="item.type=='audio'">
+                                <audio controls="controls" :src="item.content" style="max-width: 220px;max-height: 40px"></audio>
+                            </div>
+                        </div> 
                     </div>
                 </div>
                 <div class="edit">
                     <div class="bar" unselectable="on" onmousedown="return false">
-                        <span class="font J-EditItem" unselectable="on" onmousedown="return false"></span>
-                        <span class="face J-EditItem" unselectable="on" onmousedown="return false"></span>
-                        <span class="shake J-EditItem" unselectable="on" onmousedown="return false"></span>
-                        <span class="det J-EditItem" unselectable="on" onmousedown="return false"></span>
-                        <span class="img J-EditItem" unselectable="on" onmousedown="return false"><input type="file" class="add-file" @change="handleFileChange" ref="inputer" /></span>
-                        <span class="muc J-EditItem" unselectable="on" onmousedown="return false" @click="showChat">&#xe625;</span>
-                        <span class="cut J-EditItem" unselectable="on" onmousedown="return false"></span>
-                        <strong class="record fr">查看消息记录</strong>
+                        <label><i class="send large icon J-EditItem" unselectable="on" onmousedown="return false"></i><input type="file" class="add-file" id="ids" name="file" @change="upload($event)" style="left:-9999px;position:absolute;" /></label>
+                        <label><i class="area chart icon large" unselectable="on" onmousedown="return false"></i><input type="file" class="add-file" id="id" name="file" @change="uploadFiles($event)" accept="image/jpg,image/jpeg,image/png" style="left:-9999px;position:absolute;" /></label>
+                        <label><i class="music large icon J-EditItem" unselectable="on" onmousedown="return false"></i><input type="file" class="add-file" id="ids" name="file" @change="uploadFile($event)" accept="audio/*" style="left:-9999px;position:absolute;" /></label>
                     </div>
-                    <textarea id="textarea" class="textarea J-Edit" contenteditable="true" v-model="sendContent" @keyup.enter="KeyDownEnter"></textarea> 
+                    <div class="content" style="width: 550;padding: 0px;max-height: 110px;">
+                        <textarea v-if="sendtype=='text'" id="textarea" class="textarea J-Edit" contenteditable="true" v-model="sendContent" @keyup.enter="KeyDownEnter">
+                        </textarea> 
+                        <img v-if="sendtype=='image'" :src="sendContent" alt="imgurls" style="max-width: 180px;max-height: 110px;margin-left: 20px;margin-top: 10px;">
+                        <audio v-if="sendtype=='audio'" controls="controls" :src="sendContent" style="max-width: 220px;max-height: 40px;margin-top: 10px;margin-left: 20px;"></audio>
+                    </div>
+                    </textarea> 
                     <div id="bottom-button">
                         <button id="send-button" class="send-button" @click="sendMessage">发送</button>
                     </div>
@@ -111,9 +119,10 @@
                   <p>开始聊天吧!</p>
                 </div>
               </div>     
-            </div>
+        </div>
     </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./js/chat.js"></script>
 <script src="./js/index.js"></script>
 </html>
