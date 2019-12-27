@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 var vm=new Vue({
+=======
+//const raptorq = require("../build/Release/raptorq");
+new Vue({
+>>>>>>> dev
   el: '#chat',
   data: {
     group: false,
@@ -189,6 +194,7 @@ var vm=new Vue({
         .post(this.domain+"/api/messages/"+this.currentchat.username,data)
         .then(res=>{})
         .catch(error=>{console.log(error)})
+<<<<<<< HEAD
       }
     },
     scrollToBottom: function () {
@@ -281,6 +287,10 @@ var vm=new Vue({
       }
     },
     upload(){
+=======
+    },
+    sendImage(){
+>>>>>>> dev
 
     }
   }
