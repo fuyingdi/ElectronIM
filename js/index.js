@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-var vm=new Vue({
-=======
 //const raptorq = require("../build/Release/raptorq");
 new Vue({
->>>>>>> dev
   el: '#chat',
   data: {
     group: false,
@@ -25,9 +21,11 @@ new Vue({
     isde:false
   },
   created(){
+    this.sendusername();
     // console.log(this.userid)
     this.loaduser();
     this.checkIfMessage();
+
   },
   mounted()
   {
@@ -136,6 +134,10 @@ new Vue({
         {
           var a = JSON.parse(response.data.messages[i]);
           console.log(a);
+          if (a.type =="file")
+          {
+            ipcRenderer.send("rec-files", a.size);
+          }
           if(that.currentchat.username!=a.from)
           { 
             //判断chatlist有无该用户
@@ -170,6 +172,9 @@ new Vue({
       })
       .catch()
     },
+    sendusername(){
+      ipcRenderer.send("username",this.userid);
+    },
     sendMessage(){
       if(this.sendContent==""){
        console.log('no content')
@@ -194,7 +199,6 @@ new Vue({
         .post(this.domain+"/api/messages/"+this.currentchat.username,data)
         .then(res=>{})
         .catch(error=>{console.log(error)})
-<<<<<<< HEAD
       }
     },
     scrollToBottom: function () {
@@ -286,12 +290,11 @@ new Vue({
         this.isde=true;
       }
     },
-    upload(){
-=======
-    },
-    sendImage(){
->>>>>>> dev
-
+    upload(e){
+      
+      const fileObj = document.getElementById("id1").files[0]['path']; 
+      console.log(fileObj)
+      ipcRenderer.send('send-files',fileObj)
     }
   }
 });

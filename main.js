@@ -10,9 +10,22 @@ const { exec } = require('child_process');
 const { execFile, execFileSync } = require('child_process');
 const { app, BrowserWindow } = require('electron')
 const electron = require('electron');
+const dgram = require('dgram')
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
 // 垃圾回收的时候，window对象将会自动的关闭
 let win
+const server = dgram.createSocket('udp4');
+server.bind(20008)
+
+
+function encode(){
+  execFile("./a.out", ["encode"], (err, stdout, stderr) => {
+    if(err) {
+      console.log(err);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);})
+};
 function createWindow () {
   // execFile("./a.out", [], (err, stdout, stderr) => {
   //   if(err) {
@@ -23,8 +36,8 @@ function createWindow () {
 // });
   // 创建浏览器窗口。
   mainWindow = new BrowserWindow({
-    width: 360
-    ,height: 300
+    width: 800
+    ,height: 500
     ,frame: false
     ,transparent: true,
     webPreferences: {
@@ -41,22 +54,24 @@ function createWindow () {
     // 与此同时，你应该删除相应的元素。
     mainWindow = null
   })
-  stun.request('stun.l.google.com:19302', (err, res) => {
-    if (err) {
-      console.error(err);
-    } else {
-      const { address } = res.getXorAddress();
-      const { port } = res.getXorAddress();
-      console.log(address, port );
-    }
-  });
-  axios.get('/api/addrs/')
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+
+
+  // stun.request('stun.l.google.com:19302', (err, res) => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     const { address } = res.getXorAddress();
+  //     const { port } = res.getXorAddress();
+  //     console.log(address, port );
+  //   }
+  // });
+  // axios.get('/api/addrs/')
+  // .then(function (response) {
+  //   console.log(response);
+  // })
+  // .catch(function (error) {
+  //   console.log(error);
+  // });
 }
 electron.ipcMain.on('openChat', (event, arg)=> {
     var username = arg;
@@ -122,7 +137,6 @@ electron.ipcMain.on("encode", (event, arg)=>{
     console.log(`stdout: ${stdout}`);
 });
 })
-
 electron.ipcMain.on("decode", (event, arg)=>{
     //TODO:params
     execFile("./a.out", [], (err, stdout, stderr) => {
@@ -133,11 +147,19 @@ electron.ipcMain.on("decode", (event, arg)=>{
     console.log(`stdout: ${stdout}`);
 });
 })
+electron.ipcMain.on("send-files",(event,arg)=>{
 
+  exec("cp "+arg+" ./tmp_data");
+  encode()
+
+})
+electron.ipcMain.on("rec-files", (event, arg)=>{
+  decode(arg);
+})
 //发送自己的ip和端口
 electron.ipcMain.on("username",(event, arg)=>{
   var data={};
-  stun.request('stun.l.google.com:19302', (err, res) => {
+  stun.request('stun.l.google.com:19302',[server], (err, res) => {
     if (err) {
       console.error(err);
     } else {
@@ -147,7 +169,7 @@ electron.ipcMain.on("username",(event, arg)=>{
       data = {port:port, ip: address};
     }
   });
-  axios.post('http://118.24.15.77:5000/api/addrs/'+arg.username, data)
+  axios.post('http://118.24.15.77:5000/api/addrs/'+arg, data)
   .then(function (response) {
     console.log(response);
   })
