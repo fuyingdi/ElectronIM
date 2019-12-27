@@ -74,7 +74,8 @@ void encode() {
           res.push_back(y);
         }
     }
-    std::cout<<"\n"<<res.size()/65502;
+    std::ofstream outf("encoded_data", std::ofstream::binary);
+    outf.write((char*)&*res.begin(),res.size());
     // for(auto x:received)
     // {
     //   std::cout<<x.first<<" ";
@@ -90,6 +91,21 @@ void encode() {
   }
 
 void decode(){
+  // std::vector<uint8_t> m_input;
+  // std::ifstream in("./encoded_data", std::ifstream::binary);
+  // input.seekg(0,in.end);
+  // int len = m_input.tellg();
+  // //TODO:g_len = len;
+  // input.resize(len);
+  // char* a = (char*)&*input.begin();
+  // in.seekg(0,in.beg);
+  // in.read(a,len);
+
+  ////////////
+  
+
+
+  ///
   output.resize(g_len);
   using Decoder_type = RaptorQ::Decoder<typename std::vector<uint8_t>::iterator,typename std::vector<uint8_t>::iterator>;
   Decoder_type dec (RaptorQ::Block_Size::Block_225, symbol_size, Decoder_type::Report::COMPLETE);  
@@ -125,10 +141,19 @@ void decode(){
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  // std::cout<<"hello";
   RaptorQ__v1::local_cache_size (5000000);
-  encode();
-  decode();
+  char * encode_str = "encode";
+  char * decode_str = "decode";
+  if(!strcmp((char*)argv[1], encode_str))
+  {
+    encode();
+    std::cout<<"encode ok";
+  }
+  if(!strcmp((char*)argv[1], decode_str))
+  {
+    decode();
+    std::cout<<"decode ok";
+  }
 }
