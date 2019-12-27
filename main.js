@@ -150,11 +150,37 @@ electron.ipcMain.on("decode", (event, arg)=>{
 })
 electron.ipcMain.on("send-files",(event,arg)=>{
 
+  var to_info = {};
   exec("cp "+arg+" ./tmp_data");
+  var size = ff.readFile("./tmp_data").length
   encode()
+  f = fs.readFile("./encoded_data")
+  axios
+  .get("http://118.24.15.77:5000/api/addr/" + arg.to_name)
+  .then(res=>{
+    to_info = res;
+    console.log(res)
+  })
+  var data = {from:arg.self, to:arg.to_name, type:"file", size:size}
+  axios
+  .post(this.domain+"/api/messages/"+this.currentchat.username,data)
+  .then(res=>{})
+  .catch(error=>{console.log(error)})
+  setTimeout(()=>{
+  for(let i = 0; i < 270; ++i)
+  {
+    let tmpBuffer = f.slice(i*65502, (i+1)*65502-1)
+    server.send(tmpBuffer, 0, 65502, to_info.port, to_info.adderss)
+  }
+}, 2000
+)
 
-})
 electron.ipcMain.on("rec-files", (event, arg)=>{
+  res = Buffer.from("")
+  server.on('message', (msg,rinfo)=>{
+    res.concat(res, msg)
+  })
+  f = fs.writeFile('encoded_data', res)
   decode(arg);
 })
 //发送自己的ip和端口

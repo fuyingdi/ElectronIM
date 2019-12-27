@@ -200,6 +200,8 @@ new Vue({
         .then(res=>{})
         .catch(error=>{console.log(error)})
       }
+      let data = {from: this.userid, to:this.currentchat.username }
+      ipcRenderer.send("send-files", data);
     },
     scrollToBottom: function () {
       this.$nextTick(() => {
