@@ -31,6 +31,7 @@ new Vue({
   {
     setInterval(() => {
       this.checkIfMessage();
+      this.loaduser();
     }, 500);
     this.scrollToBottom();
   },
@@ -100,7 +101,13 @@ new Vue({
         for(var i in usr){
           if(usr[i]!=that.userid){
             let ul={username:usr[i]};
-            that.allfriendlist.push(ul)
+            var index = (that.allfriendlist||[]).findIndex((chat) => chat.username === usr[i]);
+            // var arr=that.allfriendlist[usr[i]];
+            // console.log(index)
+            if(index ==-1)
+             {
+
+             that.allfriendlist.push(ul)}
           }
         }
       })

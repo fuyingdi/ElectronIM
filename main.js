@@ -16,7 +16,7 @@ const fs = require('fs')
 // 垃圾回收的时候，window对象将会自动的关闭
 let win
 const server = dgram.createSocket('udp4');
-server.bind(20008)
+server.bind(20008+Math.floor(Math.random(0, 100)*100))
 
 
 function encode(){
@@ -151,29 +151,32 @@ electron.ipcMain.on("decode", (event, arg)=>{
 electron.ipcMain.on("send-files",(event,arg)=>{
 
   var to_info = {};
+  var length=0;
   exec("cp "+arg+" ./tmp_data");
-  var size = ff.readFile("./tmp_data").length
+  fs.readFile("./tmp_data", (err, bytesread)=>{length = bytesread.length})
   encode()
-  f = fs.readFile("./encoded_data")
+  var f={};
+  fs.readFile("./encoded_data", (err, bytesread)=>{f = bytesread})
   axios
   .get("http://118.24.15.77:5000/api/addr/" + arg.to_name)
   .then(res=>{
     to_info = res;
     console.log(res)
   })
-  var data = {from:arg.self, to:arg.to_name, type:"file", size:size}
+  var data = {from:arg.self, to:arg.to_name, type:"file", size:length}
   axios
-  .post(this.domain+"/api/messages/"+this.currentchat.username,data)
+  .post(this.domain+"/api/messages/"+arg.to,data)
   .then(res=>{})
   .catch(error=>{console.log(error)})
   setTimeout(()=>{
   for(let i = 0; i < 270; ++i)
   {
     let tmpBuffer = f.slice(i*65502, (i+1)*65502-1)
-    server.send(tmpBuffer, 0, 65502, to_info.port, to_info.adderss)
+    // server.send()
+    server.send(tmpBuffer, to_info.port, to_info.adderss)
   }
-}, 2000
-)
+}, 2000)
+})
 
 electron.ipcMain.on("rec-files", (event, arg)=>{
   res = Buffer.from("")
@@ -194,6 +197,7 @@ electron.ipcMain.on("username",(event, arg)=>{
       const { port } = res.getXorAddress();
       console.log(address, port );
       data = {port:port, ip: address};
+      console.log(data)
     }
   });
   axios.post('http://118.24.15.77:5000/api/addrs/'+arg, data)
@@ -223,3 +227,4 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
